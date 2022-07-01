@@ -5,7 +5,7 @@
 In client folder
 ```sh
 npm install
-npm run dev
+npm run serve
 ```
 
 In server folder

@@ -21,8 +21,26 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
+import { useQuery } from '@vue/apollo-composable'
+
+const CHARACTERS_QUERY = gql`
+  query Hello {
+    hello
+  }
+`
+
 export default {
   name: 'SearchAutocomplete',
+  setup () {
+    const { result, loading, error } = useQuery(CHARACTERS_QUERY);
+
+    return {
+      result,
+      loading,
+      error
+    }
+  }
   props: {
     items: {
       type: Array,
