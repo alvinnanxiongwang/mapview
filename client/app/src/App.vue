@@ -1,14 +1,9 @@
 <template>
-  <p v-if="error">Something went wrong...</p>
-  <p v-if="loading">Loading...</p>
-  <p v-else>
-    {{ result.hello }}
-  </p>
-  <div></div>
+  <searchAutocomplete />
 </template>
 
 <script>
-import SearchAutocomplete from '../../client3/app/src/components/SearchAutocomplete.vue'
+import SearchAutocomplete from './components/SearchAutocomplete.vue'
 export default {
   name: 'App',
   components: {

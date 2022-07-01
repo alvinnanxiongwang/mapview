@@ -74,7 +74,7 @@ const schema = buildSchema(`
 // The root provides a resolver function for each API endpoint
 const root = {
     location: (args) => {
-        return locations.filter(item => item.toLowerCase().indexOf(args.match.toLowerCase()) > -1);
+        return !!args.match ? locations.filter(item => item.toLowerCase().indexOf(args.match.toLowerCase()) > -1) : [];
     },
 };
 

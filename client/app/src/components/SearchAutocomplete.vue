@@ -10,11 +10,11 @@
         class="autocomplete-results"
     >
       <li
-          v-for="(result, i) in results"
-          :key="i"
+          v-for="location in result.location"
+          :key="location"
           class="autocomplete-result"
       >
-        {{ result }}
+        {{ location }}
       </li>
     </ul>
   </div>
@@ -24,23 +24,22 @@
 import gql from 'graphql-tag'
 import { useQuery } from '@vue/apollo-composable'
 
-const CHARACTERS_QUERY = gql`
-  query Hello {
-    hello
-  }
-`
-
 export default {
   name: 'SearchAutocomplete',
-  setup () {
-    const { result, loading, error } = useQuery(CHARACTERS_QUERY);
+  setup() {
+    const { result, loading, error, refetch } = useQuery(gql`
+  query getMatchLocation($match: String) {
+    location(match: $match)
+  }
+`, { match: ''});
 
     return {
       result,
       loading,
-      error
+      error,
+      refetch,
     }
-  }
+  },
   props: {
     items: {
       type: Array,
@@ -51,16 +50,12 @@ export default {
   data() {
     return {
       search: '',
-      results: [],
       isOpen: false,
     };
   },
   methods: {
-    filterResults() {
-      this.results = this.items.filter(item => item.toLowerCase().indexOf(this.search.toLowerCase()) > -1);
-    },
     onChange() {
-      this.filterResults();
+      this.refetch({match: this.search});
       this.isOpen = true;
     }
   },
