@@ -2,6 +2,7 @@ import { createApp, provide, h } from 'vue'
 import { DefaultApolloClient } from '@vue/apollo-composable'
 import { ApolloClient, InMemoryCache } from '@apollo/client/core'
 import App from './App.vue'
+import  VueGoogleMaps from '@fawmi/vue-google-maps'
 
 const cache = new InMemoryCache()
 
@@ -17,5 +18,9 @@ const app = createApp({
 
     render: () => h(App),
 })
-
+app.use(VueGoogleMaps, {
+    load: {
+        key: 'AIzaSyBOoJhFh3oq0ygKyjcYytDJmsbFW-VM0RE',
+    },
+});
 app.mount('#app');
