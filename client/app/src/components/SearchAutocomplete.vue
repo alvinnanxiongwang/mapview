@@ -13,11 +13,22 @@
           v-for="location in result.location"
           :key="location"
           class="autocomplete-result"
+          @click="onClickLocation(location)"
       >
         {{ location }}
       </li>
     </ul>
   </div>
+  <GMapMap
+      :center="center"
+      :zoom="4"
+      map-type-id="terrain"
+      style="width: 80vw; height: 700px"
+  >
+    <GMapPolygon
+        :paths="paths"
+    />
+  </GMapMap>
 </template>
 
 <script>
@@ -32,6 +43,10 @@ export default {
     location(match: $match)
   }
 `, { match: ''});
+
+
+
+
 
     return {
       result,
@@ -51,12 +66,21 @@ export default {
     return {
       search: '',
       isOpen: false,
+      center: {lat: 25.774, lng: -80.19},
+      paths: [
+        { lat: 25.774, lng: -80.19 },
+        { lat: 18.466, lng: -66.118 },
+        { lat: 32.321, lng: -64.757 },
+      ],
     };
   },
   methods: {
     onChange() {
       this.refetch({match: this.search});
       this.isOpen = true;
+    },
+    onClickLocation(location) {
+      this.search = location
     }
   },
 };
@@ -73,7 +97,7 @@ export default {
   border: 1px solid #eeeeee;
   height: 120px;
   min-height: 1em;
-  max-height: 6em;
+  max-height: 10em;
   overflow: auto;
 }
 

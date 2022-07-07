@@ -21,6 +21,7 @@ const app = createApp({
 app.use(VueGoogleMaps, {
     load: {
         key: 'AIzaSyBOoJhFh3oq0ygKyjcYytDJmsbFW-VM0RE',
+        libraries: "visualization"
     },
 });
 app.mount('#app');
