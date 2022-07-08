@@ -77,8 +77,6 @@ export default {
       search: '',
       isOpen: false,
       center: {lat: 39.8283, lng: -98.5795},
-      //center: {lat: 25.774, lng: -80.19},
-      //center: {lat: 36, lng: -118},
       paths: [],
       markers: []
     };
@@ -101,37 +99,39 @@ export default {
       };
 
       axios.get(apiPath, { params: params }  ).then( (response) => {
+        const responseData = response.data[0]
         this.myMapRef.$mapPromise.then(mapObject => {
           mapObject.setCenter({
-            lat: Number(response.data[0].lat),
-            lng: Number(response.data[0].lon),
+            lat: Number(responseData.lat),
+            lng: Number(responseData.lon),
           });
           mapObject.setZoom(6)
+        })
 
-        //this.paths = response.data[0].geojson.coordinates
-        //console.log("paths", this.paths)
-        console.log("polygon", this.myPolyRef)
-        console.log('geo',response.data[0].geojson)
-        },
-
-        //$refs.myPolyRef
         this.markers = [
           {
             position: {
-              lat: Number(response.data[0].lat), lng: Number(response.data[0].lon)
+              lat: Number(responseData.lat), lng: Number(responseData.lon)
             },
           }
-        ],
-        this.paths = response.data[0].geojson.coordinates[0],
-        console.log('path', this.paths)
-        // this.myPolyRef.$mapPromise.then(() => {
-        //   this.paths = [
-        //     { lat: 32, lng: 33.3629593 },
-        //     { lat: 12.466, lng: -66.118 },
-        //     { lat: 80.321, lng: -64.757 },
-        //   ]
-        // }),
-        )
+        ]
+
+        let allPolyPath = []
+        if (responseData.geojson?.type == "Polygon") {
+          const coord = responseData.geojson.coordinates[0]
+          allPolyPath = coord.map(latLng => ({lat: latLng[1], lng: latLng[0]}));
+        } else {
+          const coord = responseData.geojson.coordinates;
+          for(let i = 0; i < coord.length; i++) {
+            const item = coord[i][0]
+            allPolyPath = allPolyPath.concat(item.map(latLng => ({lat: latLng[1], lng: latLng[0]})))
+          }
+        }
+
+
+        this.myPolyRef.$mapPromise.then(() => {
+          this.paths = allPolyPath
+        })
       })
     },
   },
